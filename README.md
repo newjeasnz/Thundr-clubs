@@ -3,9 +3,11 @@ _Bring the Energy of Lightning to your Match_
 
 Check out here: [THUNDR clubs Web](https://jessica-tandra-thundrclubs.pbp.cs.ui.ac.id/)
 
-Nama: Jessica Tandra
-NPM: 2406355445
-Kelas: PBP - B 
+Nama    : Jessica Tandra
+NPM     : 2406355445
+Kelas   : PBP - B 
+
+---
 
 ## TUGAS 2 - PBP 2025/2026
 Berikut adalah jawaban dari pertanyaan yang terdapat pada Tugas 2:
@@ -45,6 +47,10 @@ melakukan konfigurasi, setelah melakukan migrasi akan ada satu file database (db
 
 ### Cara Kerja Migrasi Database
 
+
 ### Mengapa framework Django dijadikan permulaan pembelajaran pengembangan perangkat lunak?
+Django sering dijadikan permulaan dalam pembelajaran pengembangan perangkat lunak karena sifatnya yang batteries included, sehingga sudah menyediakan banyak fitur bawaan untuk mempercepat proses pengembangan. Framework ini juga menggunakan arsitektur Model-View-Template (MVT) yang terstruktur, sehingga pemula dapat dengan mudah memahami konsep penting seperti routing, templating, dan manajemen database tanpa perlu membangun semuanya secara manual.
+
+Selain itu, Django dibangun dengan Python, bahasa yang sederhana dan familiar bagi banyak pemula, sehingga proses belajar terasa lebih ringan. Dokumentasi yang rapi dan komunitas yang besar juga menjadi keunggulan penting, karena memudahkan siapa pun menemukan panduan maupun solusi ketika menghadapi kesulitan. Dengan kombinasi ini, Django menjadi pilihan ideal sebagai framework pengenalan dalam dunia pengembangan perangkat lunak.
 
 ### Feedback untuk Asisten Dosen Tutorial 1
