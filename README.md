@@ -37,7 +37,7 @@ Berikut adalah jawaban dari pertanyaan yang terdapat pada Tugas 2:
 - Setelah aplikasi selesai dibuat, selanjutnya yaitu melakukan deployment ke PWS dengan cara mengunggah proyek ke server PWS dengan menjalankan perintah `add`, `commit`, dan `git push pws master`. Dengan demikian, aplikasi yang sebelumnya hanya dapat dijalankan di komputer lokal, sekarang dapat diakses melalui internet dengan URL tertentu.
 
 **8. Membuat sebuah README.md yang berisi tautan menuju aplikasi PWS yang sudah di-deploy, serta jawaban dari beberapa pertanyaan berikut.**
-- Setelah aplikasi berhasil di-deploy ke PWS. Selanjutnya adalah membuat file README.md yang berisi tautan menuju aplikasi yang sudah di-deploy di PWS, langkah-langkah impplementasi dan beberapa pertanyaan terkait Django.
+- Setelah aplikasi berhasil di-deploy ke PWS. Selanjutnya adalah membuat file README.md yang berisi tautan menuju aplikasi yang sudah di-deploy di PWS, langkah-langkah impplementasi dan beberapa pertanyaan terkait Django.  
 
 
 ### 📊 Bagan Alur Django
@@ -47,26 +47,26 @@ Bagan alur request pada aplikasi web Django dimulai dari pengguna mengakses URL 
 
 Setelah data selesai diolah, hasilnya akan digabungkan dengan template HTML yang mengatur tampilan halaman. Proses ini menghasilkan sebuah halaman web yang sudah dirender secara utuh. Terakhir, Django mengirimkan HTTP response berisi halaman tersebut kembali ke browser, sehingga pengguna dapat melihat hasilnya di layar.
 
-Singkatnya, alur Django adalah:
-Pengguna → Request → urls.py → views.py → models.py + DB → Template HTML → Response → Pengguna.
+Singkatnya, alur Django adalah:  
+Pengguna → Request → urls.py → views.py → models.py + DB → Template HTML → Response → Pengguna.  
 
 
 ### ⚙️ Peran `settings.py`
 Dalam proyek Django, `settings.py` berperan sebagai pusat **konfigurasi utama** yang mengatur berbagai aspek aplikasi. Misalnya, ketika membuat aplikasi baru bernama `main`, aplikasi tersebut harus didaftarkan pada bagian `INSTALLED_APPS` di dalam berkas `settings.py` agar dapat dikenali dan dijalankan oleh proyek. File ini menyimpan berbagai pengaturan penting, seperti konfigurasi database, daftar aplikasi yang digunakan (INSTALLED_APPS), middleware, pengaturan keamanan (misalnya SECRET_KEY, DEBUG, dan ALLOWED_HOSTS), hingga pengaturan internasionalsasi seperti bahasa dan zona waktu.
 
-Dengan kata lain, `settings.py` adalah inti dari setiap proyek Django, tempat developer mengatur lingkungan proyek sesuai kebutuhan, baik untuk tahap pengembangan maupun produksi. Karena semua komponen Django merujuk pada file ini, perubahan yang dilakukan di settings.py akan langsung memengaruhi perilaku seluruh aplikasi. 
+Dengan kata lain, `settings.py` adalah inti dari setiap proyek Django, tempat developer mengatur lingkungan proyek sesuai kebutuhan, baik untuk tahap pengembangan maupun produksi. Karena semua komponen Django merujuk pada file ini, perubahan yang dilakukan di settings.py akan langsung memengaruhi perilaku seluruh aplikasi.   
 
 
 ### 📲 Cara Kerja Migrasi Database
 Migrasi database di Django bekerja sebagai mekanisme untuk mengubah struktur tabel basis data sesuai dengan perubahan model yang didefinisikan pada kode program. Saat developer membuat atau mengubah model di `models.py`, perubahan tersebut tidak langsung tercermin di database. Untuk menerapkannya digunakan dua langkah utama:
 1. `python manage.py makemigrations` -> membuat berkas migrasi skema model sebelum diaplikasikan ke dalam database.
-2. `python manage.py migrate` -> menerapkan skema model yang telah dibuat ke dalam database Django lokal.
+2. `python manage.py migrate` -> menerapkan skema model yang telah dibuat ke dalam database Django lokal.  
 
 
 ### 🤔 Mengapa framework Django dijadikan permulaan pembelajaran pengembangan perangkat lunak?
 Django sering dijadikan permulaan dalam pembelajaran pengembangan perangkat lunak karena sifatnya yang batteries included, sehingga sudah menyediakan banyak fitur bawaan untuk mempercepat proses pengembangan. Framework ini juga menggunakan arsitektur Model-View-Template (MVT) yang terstruktur, sehingga pemula dapat dengan mudah memahami konsep penting seperti routing, templating, dan manajemen database tanpa perlu membangun semuanya secara manual.
 
-Selain itu, Django dibangun dengan Python, bahasa yang sederhana dan familiar bagi banyak pemula, sehingga proses belajar terasa lebih ringan. Dokumentasi yang rapi dan komunitas yang besar juga menjadi keunggulan penting, karena memudahkan siapa pun menemukan panduan maupun solusi ketika menghadapi kesulitan. Dengan kombinasi ini, Django menjadi pilihan ideal sebagai framework pengenalan dalam dunia pengembangan perangkat lunak.
+Selain itu, Django dibangun dengan Python, bahasa yang sederhana dan familiar bagi banyak pemula, sehingga proses belajar terasa lebih ringan. Dokumentasi yang rapi dan komunitas yang besar juga menjadi keunggulan penting, karena memudahkan siapa pun menemukan panduan maupun solusi ketika menghadapi kesulitan. Dengan kombinasi ini, Django menjadi pilihan ideal sebagai framework pengenalan dalam dunia pengembangan perangkat lunak.  
 
 
 ### 👩‍💻 Feedback untuk Asisten Dosen Tutorial 1
