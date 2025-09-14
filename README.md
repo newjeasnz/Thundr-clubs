@@ -146,7 +146,7 @@ Berikut alur lebih lengkap dari proses penyerangan CSRF:
     ```
 
 3. **Ubah berkas `main.html` untuk membuat halaman utama yang memiliki tombol "Add" serta tombol "Detail" pada setiap data objek model**
-    ```python
+    ```html
     {% extends 'base.html' %}
     {% block content %}
     <h1>{{ app_name }}</h1>
@@ -241,7 +241,7 @@ Berikut alur lebih lengkap dari proses penyerangan CSRF:
     ```
 
 3. **Buat template HTML `create_product.html` sebagai halaman `form`**
-    ```python
+    ```html
     {% extends 'base.html' %} 
     {% block content %}
     <p><a href="{% url 'main:show_main' %}"><button>← Back</button></a></p>
@@ -293,7 +293,7 @@ Berikut alur lebih lengkap dari proses penyerangan CSRF:
     ```
 
 2. **Buat template HTML `detail_product.html` sebagai halaman yang menampilkan detail Product**
-    ```python
+    ```html
     {% extends 'base.html' %}
     {% block content %}
 
