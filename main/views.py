@@ -5,10 +5,12 @@ from main.models import Product
 from main.forms import ProductForm
 
 def show_main(request):
+    products = Product.objects.all()
     context = {
         'app_name': 'THUNDR clubs',
         'name': 'Jessica Tandra',
-        'class': 'PBP B'
+        'class': 'PBP B',
+        'product_list': products
     }
 
     return render(request, "main.html", context)
@@ -21,11 +23,11 @@ def create_product(request):
         return redirect('main:show_main')
     
     context = {'form': form}
-    return render(request, "add_product.html", context)
+    return render(request, "create_product.html", context)
 
 def show_detail_product(request, id):
     product = get_object_or_404(Product, pk=id)
-    
+
     context = {
         'product': product
     }

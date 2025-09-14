@@ -6,4 +6,50 @@
 <p>{{ name }}</p> 
 <h4>Class: </h4>
 <p>{{ class }}</p>
+
+<a href="{% url 'main:create_product' %}">
+  <button>+ Add Product</button>
+</a>
+
+<hr>
+
+{% if not product_list %}
+<p>Belum ada product yang tersedia.</p>
+{% else %}
+
+{% for product in product_list %}
+<div class="card">
+    <div class="card-image">
+        {% if product.thumbnail %}
+            <img src="{{ product.thumbnail }}" alt="thumbnail" width="150" height="100" style="object-fit: cover; border-radius: 8px;">
+        {% else %}
+            <div class="no-thumbnail">No Image Available</div>
+        {% endif %}
+    </div>
+
+    <div class="card-content">
+        <h2 class="product-title">
+            <a href="{%url 'main:show_detail_product' product.id %}"
+            style="text-decoration: none; color: inherit;">
+                {{ product.name }}
+            </a>
+        </h2>
+
+        <p><b>Price:</b> Rp {{ product.price }}</p>
+        <p><b>Category:</b> {{ product.get_category_display }}</p>
+        <p><b>Description:</b> {{ product.description }}</p>
+
+        {% if product.is_featured %}
+            <p class="featured">🌟 Featured Product </p>
+        {% endif %}
+
+        <a href="{% url 'main:show_detail_product' product.id %}">
+            Detail
+        </a>
+    </div>
+</div>
+<hr style="border-top: 1px solid #ddd; margin: 15px 0;">
+{% endfor %}
+
+{% endif %}
 {% endblock content %}
