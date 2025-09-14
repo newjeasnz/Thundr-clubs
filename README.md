@@ -16,7 +16,7 @@ Kelas     : PBP B
 Berikut adalah jawaban dari pertanyaan yang terdapat pada Tugas 3:
 
 ### Jelaskan mengapa kita memerlukan data delivery dalam pengimplementasian sebuah platform?
-
+Data delivery adalah proses fundamental yang memungkinkan sebuah platform berfungsi secara maksimal. Ia merupakan mekanisme yang memastikan data dapat berpindah secara aman dan efisien antara berbagai komponen, seperti database, server, dan antarmuka pengguna. Tanpa sistem ini, informasi tidak akan sampai ke pengguna atau layanan lain tepat waktu, sehingga mengganggu fungsionalitas, kinerja, dan pengalaman pengguna dari platform tersebut.
 
 ### Menurutmu, mana yang lebih baik antara XML dan JSON? Mengapa JSON lebih populer dibandingkan XML?
 Meskipun memiliki beberapa kekurangan, JSON secara keseluruhan dianggap lebih baik dan lebih populer daripada XML karena tiga alasan utama, yaitu: sintaks yang lebih sederhana, ukuran file yang lebih kecil, dan kecepatan pemrosesan yang lebih tinggi.
