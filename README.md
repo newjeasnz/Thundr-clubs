@@ -118,7 +118,7 @@ Berikut alur lebih lengkap dari proses penyerangan CSRF:
 ### 3. Membuat halaman yang menampilkan data objek model yang memiliki tombol "Add" yang akan redirect ke halaman `form`, serta tombol "Detail" pada setiap data objek model yang akan menampilkan halaman detail objek.
 **Langkah-langkah:**
 1. **Buat berkas dan direktori baru `templates/base.html` dan isi berkas tersebut**
-    ```python
+    ```html
     {% load static %}
     <!DOCTYPE html>
     <html lang="en">
