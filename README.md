@@ -9,341 +9,239 @@ Kelas     : PBP B
 
 ### Archive Tugas
 - [Tugas 2 - PBP 2025/2026](https://github.com/newjeasnz/Thundr-clubs/wiki/TUGAS-2-%E2%80%90-PBP-2025-2026)
+- [Tugas 3 - PBP 2025/2026](https://github.com/newjeasnz/Thundr-clubs/wiki/TUGAS-3-%E2%80%90-PBP-2025-2026)
 
 ---
 
-## TUGAS 3 - PBP 2025/2026
-Berikut adalah jawaban dari pertanyaan yang terdapat pada Tugas 3:
+## TUGAS 4 - PBP 2025/2026
+Berikut adalah jawaban dari pertanyaan yang terdapat pada Tugas 4:
 
-### Jelaskan mengapa kita memerlukan data delivery dalam pengimplementasian sebuah platform?
-Data delivery adalah proses fundamental yang memungkinkan sebuah platform berfungsi secara maksimal. Ia merupakan mekanisme yang memastikan data dapat berpindah secara aman dan efisien antara berbagai komponen, seperti database, server, dan antarmuka pengguna. Tanpa sistem ini, informasi tidak akan sampai ke pengguna atau layanan lain tepat waktu, sehingga mengganggu fungsionalitas, kinerja, dan pengalaman pengguna dari platform tersebut.
+### Apa itu Django `AuthenticationForm`? Jelaskan juga kelebihan dan kekurangannya.
+AuthenticationForm adalah form built-in yang disediakan Django di modul `django.contrib.auth.forms` untuk memfasilitasi proses login pengguna. Form ini menangani validasi username dan password, sehingga developer tidak perlu menulis validasi login secara manual.
 
-### Menurutmu, mana yang lebih baik antara XML dan JSON? Mengapa JSON lebih populer dibandingkan XML?
-Meskipun memiliki beberapa kekurangan, JSON secara keseluruhan dianggap lebih baik dan lebih populer daripada XML karena tiga alasan utama, yaitu: sintaks yang lebih sederhana, ukuran file yang lebih kecil, dan kecepatan pemrosesan yang lebih tinggi.
+Fungsi utama:
+1. Memvalidasi apakah username dan password yang dimasukkan sesuai dengan data di database.
+2. Memberikan pesan error otomatis jika login gagal (misalnya username tidak ada atau password salah).
+3. Dapat langsung digunakan di view untuk login, atau dikustomisasi sesuai kebutuhan.
 
-- **Sederhana dan Ringkas**: Sintaks JSON yang minimalis jauh lebih mudah dibaca dan ditulis oleh manusia maupun mesin dibandingkan XML. Selain itu, JSON lebih ringkas Karena JSON tidak menggunakan tag pembuka dan penutup yang berlebihan seperti XML, sehingga ukuran filenya lebih kecil dan secara signifikan mengurangi penggunaan bandwidth dan mempercepat transfer data.
+Kelebihan:
+1. Mudah digunakan dan terintegrasi dengan Django
+    Form ini sudah siap pakai untuk login dan bisa langsung bekerja dengan `login()` dan middleware `AuthenticationMiddleware`.
+2. Validasi otomatis dan aman
+    Memeriksa username dan password sesuai database, menggunakan hash password.
+3. Dukungan pesan error yang jelas
+    Feedback otomatis membantu user memahami alasan login gagal, misalnya password salah atau username tidak ada.
 
-- **Kecepatan Pemrosesan**: Proses parsing (membaca dan mengurai) data JSON jauh lebih cepat daripada XML. Dalam aplikasi yang sering melakukan pertukaran data (seperti API), kecepatan ini sangat menentukan responsivitas dan pengalaman pengguna.
-
-- **Integrasi Native** : Karena sintaksnya yang mirip dengan objek JavaScript, JSON dapat diolah secara native oleh JavaScript tanpa memerlukan library tambahan yang kompleks, menjadikannya lebih mudah diimplementasi dalam web.
-
-Meskipun XML memiliki keunggulan dalam validasi skema dan dukungan namespace, JSON tetap dianggap lebih unggul dan lebih populer. Hal ini karena JSON menawarkan kecepatan, keringkasan, dan kemudahan implementasi yang sangat krusial, terutama untuk aplikasi web modern.
-
-
-### Jelaskan fungsi dari method `is_valid()` pada form Django dan mengapa kita membutuhkan method tersebut?
-`is_valid()` adalah method pada form Django yang berfungsi untuk melakukan validasi terhadap data yang dikirimkan oleh pengguna. Method ini memeriksa apakah data di dalam form (yang berasal dari `request.POST`) memenuhi semua aturan yang telah ditentukan di dalam `ProductForm`, seperti tipe data, batasan karakter, dan apakah semua field yang wajib diisi sudah terisi.
-
-Jika semua data memenuhi aturan, `is_valid()` akan mengembalikan nilai `True` dan data akan diproses lebih lanjut (misalnya disimpan dalam database). Sebaliknya, jika ada satu atau lebih field yang datanya tidak valid, method ini akan mengembalikan nilai `False` dan memberikan pesan-pesan error yang relevan.
-
-Method `is_valid()` adalah penjaga gerbang utama yang melindungi aplikasi dari data yang tidak diinginkan atau bahkan berbahaya. Method ini memastikan bahwa hanya data yang valid dan sesuai dengan aturan yang dapat disimpan ke dalam database. Tanpa validasi ini, keamanan aplikasi dan integritas data tidak akan terjamin.
+Kekurangan:
+1. Kurang fleksibel untuk kebutuhan khusus
+    Misal login menggunakan email, captcha, atau multi-factor authentication (2FA) memerlukan kustomisasi tambahan.
+2. Tampilan terbatas -> Form ini hanya menangani logika validasi, tidak mencakup desain tampilan.
+3. Validasi terbatas
+    Hanya mengecek username dan password. Pengecekan lain seperti status user (misal banned, belum verifikasi email, atau role tertentu) harus ditambahkan secara manual.
 
 
-### Mengapa kita membutuhkan `csrf_token` saat membuat form di Django? Apa yang dapat terjadi jika kita tidak menambahkan `csrf_token` pada form Django? Bagaimana hal tersebut dapat dimanfaatkan oleh penyerang?
-`csrf_token` adalah mekanisme keamanan yang krusial di Django untuk melindungi form dari serangan CSRF (*Cross-Site Request Forgery*). `csrf_token` ini adalah sebuah nilai unik yang ditambahkan ke dalam setiap formulir. Fungsinya memastikan bahwa permintaan yang dikirim ke server benar-benar berasal dari formulir yang sah di situs kita, bukan dari situs lain yang berbahaya.
+### Apa perbedaan antara autentikasi dan otorisasi? Bagaiamana Django mengimplementasikan kedua konsep tersebut?
+- **Autentikasi:** Proses memastikan identitas seseorang (misalnya melalui password dan username). Dalam konteks web, ini biasanya berarti memastikan bahwa user yang mencoba mengakses aplikasi memang siapa yang dia klaim. 
+    - Contoh: login dengan username & password. Django akan mengecek apakah username dan password cocok dengan yang tersimpan di database.
 
-Secara singkat, proses serangan CSRF dimulai ketika pengguna yang sedang login di situs kita kemudian mengunjungi situs berbahaya milik penyerang. Situs berbahaya tersebut secara otomatis memaksa browser pengguna untuk mengirimkan request ke server kita. Karena browser pengguna secara otomatis menyertakan kredensial yang valid, dan tanpa token tersebut, server kita tidak bisa membedakan permintaan yang diterima berasal dari sumber yang sah. Alhasil, server memproses permintaan penyerang dan membiarkan mereka mengubah data pengguna atau melakukan tindakan lain yang dapat merugikan pengguna.
+    **Implementasi di Django:**
+    Django memiliki modul built-in yaitu `django.contrib.auth`. yang menyediakan kerangka kerja lengkap untuk autentikasi dan otorisasi pengguna. Modul ini memungkinkan developer untuk mengelola login, logout, user, permission, dan grup tanpa harus membangun sistem keamanan dari nol. Fitur utama yang tersedia:
+        1. Model user (`django.contrib.auth.models.User`) → Menyimpan informasi identitas pengguna, seperti username, password, email, dsb
+        2. Login & logout (`django.contrib.auth.login()` dan `logout()`) 
+            - Fungsi `login(request, user)` menyimpan sesi pengguna yang telah berhasil autentikasi.
+            - Fungsi `logout(request)` menghapus informasi sesi, sehingga pengguna dianggap keluar (unauthenticated).
+        3. Form login (`AuthenticationForm`) → berfungsi memvalidasi username dan password dan memberikan error secara otomatis jika login gagal
+        4. Middleware (`AuthenticationMiddleware`) → Secara otomatis menambahkan objek `request.user` ke setiap request. Jika user sudah login, request.user berisi objek User dan jika belum, berisi AnonymousUser. Middleware menyediakan informasi user sehingga otorisasi bisa dilakukan di view atau template.
 
-Berikut alur lebih lengkap dari proses penyerangan CSRF:
-1. Pengguna login ke situs kita (misalnya, `ThundrClubs.com`). Browser pengguna sekarang memiliki session cookie yang membuktikan bahwa mereka sudah terotentikasi.
-2. Penyerang membuat situs web berbahaya (misalnya, `situs-jahat.com`). Di situs ini, penyerang membuat formulir HTML tersembunyi yang secara otomatis mengirimkan permintaan ke URL di `ThundrClubs.com`, misalnya `ThundrClubs.com/add-to-cart/`.
-3. Pengguna yang masih login di `ThundrClubs.com` mengunjungi `situs-jahat.com`.
-4. Tanpa sepengetahuan pengguna, browser pengguna secara otomatis menjalankan formulir tersembunyi tersebut.
-5. Tanpa adanya `csrf_token` untuk divalidasi, Django melihat permintaan ini sebagai permintaan sah yang berasal dari pengguna yang terotentikasi. Situs kita akan memprosesnya, menambahkan produk ke keranjang, mengubah data, atau melakukan tindakan lain tanpa sepengetahuan atau persetujuan pengguna.
+- **Otorisasi:** Proses pemberian hak akses atau izin kepada pengguna yang telah terautentikasi, untuk melakukan tindakan tertentu atau mengakses sumber daya (resources) tertentu dalam sistem komputer sesuai dengan hak akses yang dimiliki.
+    - Contoh: Dalam sebuah aplikasi web, pengguna yang login sebagai “Admin” bisa menghapus artikel, sedangkan pengguna “Member” hanya bisa membaca dan mengomentari artikel.
 
-----
-### Langkah Pengimplementasian.
-### 1. Tambahkan 4 fungsi `views` baru untuk melihat objek yang sudah ditambahkan dalam format XML, JSON, XML by ID, dan JSON by ID.
-**Langkah-langkah:**
-1. **Pada `views.py`, tambahkan _import_ `HttpResponse` dan `Serializer`**
+    **Implementasi di Django:**
+    1. Django mengatur hak akses menggunakan permissions dan groups.
+    2. Permissions bisa di-assign per model atau view tertentu.
+    3. Django juga mendukung groups untuk mengelompokkan permission, misalnya group “Admin” atau “Editor”.
+    4. Otorisasi biasanya dicek menggunakan:
+        - Decorator `@login_required` → hanya pengguna yang login bisa mengakses view.
+        - Decorator `@permission_required('app_name.permission_codename')` → memeriksa izin tertentu
+
+
+### Apa saja kelebihan dan kekurangan session dan cookies dalam konteks menyimpan state di aplikasi web?
+1. **Cookies**
+Cookies adalah berkas data berukuran kecil yang disimpan pada sisi klien (browser) oleh server. Cookies kemudian akan dikirim kembali oleh browser pada setiap permintaan (request) berikutnya ke server yang sama. Dengan demikian, cookies berfungsi untuk mempertahankan informasi state di sisi klien.
+**Kelebihan cookies:**
+- Seluruh browser modern telah mendukung cookies tanpa perlu konfigurasi tambahan.
+- Cookies dapat diset untuk bertahan meskipun browser ditutup, sehingga berguna untuk menyimpan preferensi pengguna dalam jangka panjang.
+- Mengurangi beban server -> karena data disimpan di sisi klien, server tidak perlu menyimpan informasi state untuk setiap pengguna.
+
+**Kekurangan cookies:**
+- Ukuran terbatas –> cookies umumnya memiliki batas kapasitas sekitar 4 KB per domain.
+- Cookies disimpan di sisi klien sehingga rentan terhadap manipulasi dan serangan, seperti Cross-Site Scripting (XSS).
+- Overhead jaringan: cookies dikirim pada setiap permintaan HTTP, sehingga dapat meningkatkan ukuran request dan response.
+- Penyimpanan data penting seperti kata sandi dalam cookies sangat tidak disarankan.
+
+2. **Session**
+Session adalah mekanisme penyimpanan state yang dikelola di sisi server. Pada session, klien hanya menyimpan sebuah pengenal (session ID), biasanya melalui cookie, sedangkan data state yang sesungguhnya tersimpan di server (misalnya dalam memori, file, atau basis data).
+**Kelebihan session:**
+- Keamanan lebih tinggi
+- Mendukung penyimpanan data kompleks
+- Administrator atau aplikasi dapat mengatur, menghapus, maupun memperbarui data session secara langsung dari sisi server.
+
+**Kekurangan session:**
+- Karena seluruh data dikelola oleh server, maka semakin banyak pengguna aktif akan semakin besar pula penggunaan basis data
+- Ketergantungan pada session ID, apabila session ID hilang maka state juga hilang
+- Tidak persisten secara default -> sebagian besar session berakhir ketika browser ditutup
+
+
+### Apakah penggunaan cookies aman secara default dalam pengembangan web, atau apakah ada risiko potensial yang harus diwaspadai? Bagaimana Django menangani hal tersebut?
+Secara default, penggunaan cookies tidak sepenuhnya aman. Cookies pada dasarnya adalah data yang disimpan di sisi klien (browser) dan dikirim kembali ke server setiap kali melakukan request. Hal ini menimbulkan sejumlah potensi risiko, di antaranya:
+1. **Pencurian cookies (Session Hijacking)**
+Apabila cookies tidak dienkripsi atau tidak dikirim melalui koneksi aman (HTTPS), pihak ketiga dapat melakukan penyadapan (sniffing) dan mencuri cookies, yang kemudian dapat digunakan untuk mengambil alih sesi pengguna.
+2. **Cross-Site Scripting (XSS)**
+Jika aplikasi rentan terhadap XSS, penyerang dapat menyisipkan script berbahaya yang mengakses cookies pengguna dan mengirimkannya ke penyerang.
+3. **Cross-Site Request Forgery (CSRF)**
+Cookies secara otomatis dikirim dalam setiap request ke domain terkait, sehingga dapat dimanfaatkan untuk melakukan request berbahaya tanpa sepengetahuan pengguna.
+
+Penanganan Cookies di Django:
+1. Secure Flag (`SESSION_COOKIE_SECURE`, `CSRF_COOKIE_SECURE`) -> memastikan cookies hanya dikirim melalui HTTPS.
+2. HttpOnlyFlag (`SESSION_COOKIE_HTTPONLY`) -> mencegah akses cookies oleh JavaScript, sehingga lebih aman dari XSS.
+3. SameSite Attribute (`SESSION_COOKIE_SAMESITE`, `CSRF_COOKIE_SAMESITE`) -> membatasi pengiriman cookies hanya untuk request dari domain yang sama, mengurangi risiko CSRF.
+4. Session Framework -> Django hanya menyimpan session ID di cookies, sementara data sesi disimpan di server, sehingga data sensitif tidak terekspos.
+
+---
+# Langkah Pengimplementasian
+### 1. Mengimplementasikan fungsi registrasi, login, dan logout
+- **Fungsi Registrasi**
+    - Buat form pada untuk pendaftaran pengguna baru dengan mengimport `UserCreationForm`.
+    - Buat fungsi register pada `views.py` yang menangani form registrasi dan menyimpan akun pengguna ke database ketika data di-submit
+    - Redirect pengguna ke halaman login setelah registrasi berhasil.
     ```python
-    from django.http import HttpResponse
-    from django.core import serializers
+    from django.contrib.auth.forms import UserCreationForm
+    from django.contrib import messages
+
+    def register(request):
+        form = UserCreationForm()
+
+        if request.method == "POST":
+            form = UserCreationForm(request.POST)
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Your account has been successfully created!')
+                return redirect('main:login')
+        context = {'form':form}
+        return render(request, 'register.html', context)
+    ```
+    - Buat template baru sebagai tampilan form registrasi yaitu `register.html`
+    - Impor fungsi register yang ada di `views.py` ke dalam `urls.py` dan tambahkan path url nya
+
+- **Fungsi Login**
+    - Buat autentikasi login dengan mengimport `authenticate`, `login`, dan `AuthenticationForm`
+    - Tambahkan fungsi login_user pada `views.py`
+    ```python
+    from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+    from django.contrib.auth import authenticate, login
+    def login_user(request):
+        if request.method == 'POST':
+            form = AuthenticationForm(data=request.POST)
+
+            if form.is_valid():
+                    user = form.get_user()
+                    login(request, user)
+                    response = HttpResponseRedirect(reverse("main:show_main"))
+                    response.set_cookie('last_login', str(datetime.datetime.now()))
+                    return response
+
+        else:
+            form = AuthenticationForm(request)
+        context = {'form': form}
+        return render(request, 'login.html', context)
+    ```
+    - Buat template sebagai tampilan login user dengan membuat file `login.html`
+    - Impor fungsi login_user yang ada di `views.py` ke dalam `urls.py` dan tambahkan path url nya
+
+- **Fungsi Logout**
+    - Buat autentikasi logout dengan mengimport `logout` dan kemudian tambahkan fungsi logout_user pada `views.py`
+    ```python
+    from django.contrib.auth import authenticate, login, logout
+    def logout_user(request):
+        logout(request)
+        return redirect('main:login')
+    ```
+    - Tambahkan button logout pada halaman utama
+    - Impor fungsi logout_user yang ada di `views.py` ke dalam `urls.py` dan tambahkan path url nya
+
+
+### 2. Menghubungkan model Product dengan User.
+-  Pada model `Product` tambahkan ForeignKey `User`, sehingga setiap produk yang dibuat dapat dikaitkan dengan pengguna yang membuat produk tersebut
+    ```python
+    from django.contrib.auth.models import User
+    class Product(models.Model):
+        user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    ...
     ```
 
-2. **Tambahkan 4 fungsi baru pada View untuk format JSON dan XML**
-    - **View untuk melihat objek dalam format XML**
-    ```python
-    def show_xml(request):
-        data = Product.objects.all()
-        xml_data = serializers.serialize("xml", data)
-        return HttpResponse(xml_data, content_type="application/xml")
+    - Buat file migrasi model
+    ```bash
+    python manage.py makemigrations
+    python manage.py migrate
     ```
 
-    - **View untuk melihat objek dalam format JSON**
+    - Pada `views.py`, modifikasi fungsi `create_product` dengan menggunakan `commit=False` agar field user dapat diisi dengan request.user sebelum objek disimpan. Selain itu, modifikasi fungsi  `show_main` dengan menambahkan filter berdasarkan query parameter (all atau my).
+
+### 3. Menampilkan detail informasi pengguna yang sedang logged in
+- Pada halaman utama, tampilkan detail informasi pengguna yang sedang logged in
+    - Pastikan view show_main dan show_detail_product menggunakan `@login_required` untuk memastikan hanya pengguna yang sudah login yang bisa mengakses halaman tersebut
+    - Di view, ambil data pengguna yang sedang login dengan `request.user`
     ```python
-    def show_json(request):
-        data = Product.objects.all()
-        json_data = serializers.serialize("json", data)
-        return HttpResponse(json_data, content_type="application/json")
+    def show_main(request):
+        filter_type = request.GET.get("filter", "all")
+        if filter_type == "all":
+            products = Product.objects.all()
+        else:
+            products = Product.objects.filter(user=request.user)
+            
+        context = {
+            'app_name': 'THUNDR clubs',
+            'name': request.user.username,
+        ...}
     ```
-
-    - **View untuk melihat objek dalam format XML by ID**
-    ```python
-    def show_xml_id(request, id):
-        data = Product.objects.filter(pk=id)
-        xml_data = serializers.serialize("xml", data)
-        return HttpResponse(xml_data, content_type="application/xml")
-    ```
-
-    - **View untuk melihat objek dalam format JSON by ID**
-    ```python
-    def show_json_id(request, id):
-        data = Product.objects.filter(pk=id)
-        json_data = serializers.serialize("json", data)
-        return HttpResponse(json_data, content_type="application/json")
-    ```
-
-### 2. Membuat routing URL untuk masing-masing `views` yang telah ditambahkan pada poin 1.
-**Langkah-langkah:**
-1. **Pada `main/urls.py` _import_ fungsi yang sudah dibuat pada `views.py`**
-    ```python
-    from django.urls import path
-    from main.views import show_main, show_json, show_xml, show_json_id, show_xml_id
-    ```
-
-2. **Tambahkan _path_ URL ke dalam `urlpatterns` untuk masing-masing views dalam format JSON dan XML**
-    ```python
-    app_name = 'main'
-
-    urlpatterns = [
-        path('', show_main, name='show_main'),
-        path('xml/', show_xml, name='show_xml'),
-        path('json/', show_json, name='show_json'),
-        path('xml/<str:id>/', show_xml_id, name='show_xml_id'),
-        path('json/<str:id>/', show_json_id, name='show_json_id'),
-    ]
-
-    ```
-
-### 3. Membuat halaman yang menampilkan data objek model yang memiliki tombol "Add" yang akan redirect ke halaman `form`, serta tombol "Detail" pada setiap data objek model yang akan menampilkan halaman detail objek.
-**Langkah-langkah:**
-1. **Buat berkas dan direktori baru `templates/base.html` dan isi berkas tersebut**
+    - Di template `main.html`, tampilkan informasi pengguna
     ```html
-    {% load static %}
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        {% block meta %} {% endblock meta %}
-    </head>
-
-    <body>
-        {% block content %} {% endblock content %}
-    </body>
-    </html>
-    ```
-
-2. **Masukkan berkas `base.html` ke dalam `settings.py` pada variable TEMPLATES**
-    ```python
-    TEMPLATES = [
-        {
-            'BACKEND': 'django.template.backends.django.DjangoTemplates',
-            'DIRS': [BASE_DIR / 'templates'], // di sini
-            'APP_DIRS': True,
-        }
-    ]
-    ```
-
-3. **Ubah berkas `main.html` untuk membuat halaman utama yang memiliki tombol "Add" serta tombol "Detail" pada setiap data objek model**
-    ```html
-    {% extends 'base.html' %}
-    {% block content %}
-    <h1>{{ app_name }}</h1>
-
     <h4>Name: </h4>
     <p>{{ name }}</p> 
-    <h4>Class: </h4>
-    <p>{{ class }}</p>
-
-    <a href="{% url 'main:create_product' %}">
-    <button>+ Add Product</button>
-    </a>
-
-    <hr>
-
-    {% if not product_list %}
-    <p>Belum ada product yang tersedia.</p>
-    {% else %}
-
-    {% for product in product_list %}
-    <div class="card">
-        
-        <div class="card-content">
-            <h2 class="product-title">
-                <a href="{%url 'main:show_detail_product' product.id %}"
-                style="text-decoration: none; color: inherit;">
-                {{ product.name }}
-            </a>
-        </h2>
-        
-        <div class="card-image">
-            {% if product.thumbnail %}
-                <img src="{{ product.thumbnail }}" alt="Thumbnail" width="150" height="100" style="object-fit: cover; border-radius: 8px;">
-            {% else %}
-                <div class="no-thumbnail">No Image Available</div>
-            {% endif %}
-        </div>
-
-        <p><b>Price:</b> Rp {{ product.price }}</p>
-            <p><b>Category:</b> {{ product.get_category_display }}</p>
-            <p><b>Description:</b> {{ product.description }}</p>
-
-            {% if product.is_featured %}
-                <p class="featured">🌟 Featured Product </p>
-            {% endif %}
-
-            <a href="{% url 'main:show_detail_product' product.id %}">
-                Detail
-            </a>
-        </div>
-    </div>
-    <br /><br />
-    {% endfor %}
-
-    {% endif %}
-    {% endblock content %}
     ```
 
-
-### 4. Membuat halaman `form` untuk menambahkan objek model pada app sebelumnya.
-**Langkah-langkah:**
-1. **Buat `main/forms.py` untuk model `Product` menggunakan `ModelForm`**
+### 4. Menerapkan Cookies untuk Last Login
+- Django secara otomatis menyimpan waktu terakhir pengguna login di field `last_login` di model `User`.
+    - Import `HttpResponseRedirect`, `reverse`, dan `datetime` pada `views.py`
+    - Modifikasi fungsi login_user untuk menyimpan cookie yang menyimpan timestamp terakhir login
     ```python
-    from django.forms import ModelForm
-    from main.models import Product
-
-    class ProductForm(ModelForm):
-        class Meta:
-            model = Product
-            fields = ['name', 'price', 'category', 'description', 'thumbnail', 'is_featured']
-    ```
-
-2. **Buat Function baru dalam View untuk Input Form**
-    ```python
-    from django.shortcuts import render, redirect, get_object_or_404
-    from django.http import HttpResponse
-    from django.core import serializers
-    from main.models import Product
-    from main.forms import ProductForm
-
+    import datetime
+    from django.http import HttpResponseRedirect
+    from django.urls import reverse
     ...
-    def create_product(request):
-        form = ProductForm(request.POST or None)
-
-        if form.is_valid() and request.method == "POST":
-            form.save()
-            return redirect('main:show_main')
-        
-        context = {'form': form}
-        return render(request, "create_product.html", context)
+    if form.is_valid():
+        user = form.get_user()
+        login(request, user)
+        response = HttpResponseRedirect(reverse("main:show_main"))
+        response.set_cookie('last_login', str(datetime.datetime.now()))
+        return response
     ...
     ```
-
-3. **Buat template HTML `create_product.html` sebagai halaman `form`**
+    - pada `show_main`, tambahkan `'last_login': request.COOKIES['last_login']` ke dalam variabel context
+    - Hapus cookie last_login setelah melakukan logout dengan mengubah `logout_user`.
+    - Di template, tampilkan waktu login terakhir
     ```html
-    {% extends 'base.html' %} 
-    {% block content %}
-    <p><a href="{% url 'main:show_main' %}"><button>← Back</button></a></p>
-    <h1>Add Product</h1>
-
-    <form method="POST">
-    {% csrf_token %}
-    <table>
-        {{ form.as_table }}
-        <tr>
-        <td></td>
-        <td>
-            <input type="submit" value="Add New Product" />
-        </td>
-        </tr>
-    </table>
-    </form>
-
-    {% endblock %}
+    <h5>Sesi terakhir login: {{ last_login }}</h5>
     ```
 
-4. **Tambahkan URL routing untuk Form di `urls.py`**
-    ```python
-    from django.urls import path
-    from main.views import show_main, show_json, show_xml, show_json_id, show_xml_id, create_product, 
+### 5. Membuat Dua Akun Pengguna dengan Dummy Data
+Saya membuat dua akun berbeda dengan username jessica dan tandra. Masing2 akun memiliki 3 produk:
+- username jessica
+[my product](https://github.com/user-attachments/assets/15ee0d4c-45b7-402a-9a9c-f1af206cd476)
+[my product](https://github.com/user-attachments/assets/1c24e391-c71b-4134-b8b2-19a69cbcd7d2)
+[detail](https://github.com/user-attachments/assets/5ee2c0c4-9c9a-477b-9b5c-63a7a5e53876)
 
-    app_name = 'main'
-
-    urlpatterns = [
-        path('', show_main, name='show_main'),
-        path('create-product/', create_product, name='create_product'),
-        ...
-    ]
-    ```
-
-### 5. Membuat halaman yang menampilkan detail dari setiap data objek model.
-**Langkah-langkah:**
-1. **Buat Function baru dalam View untuk detail Product**
-    ```python
-    def show_detail_product(request, id):
-        product = get_object_or_404(Product, pk=id)
-
-        context = {
-            'product': product
-        }
-
-        return render(request, "detail_product.html", context)
-    ...
-    ```
-
-2. **Buat template HTML `detail_product.html` sebagai halaman yang menampilkan detail Product**
-    ```html
-    {% extends 'base.html' %}
-    {% block content %}
-
-    <p><a href="{% url 'main:show_main' %}"><button>← Back</button></a></p>
-
-    <h1>{{ product.name }}</h1>
-
-    {% if product.thumbnail %}
-    <img src="{{ product.thumbnail }}" alt="Thumbnail" width="300">
-    <br /><br />
-    {% endif %}
-
-    <p><b>Price:</b> Rp {{ product.price }}</p>
-    <p><b>Category:</b> {{ product.get_category_display }}</p>
-    <p><b>Description:</b> {{ product.description }}</p>
-
-    {% if product.is_featured %}
-        <p><b>🌟 Featured Product</b></p>
-    {% endif %}
-
-    {% endblock content %}
-    ```
-
-3. **Buat URL routing untuk detail Product di `urls.py`**
-    ```python
-    from main.views import show_main, show_json, show_xml, show_json_id, show_xml_id, create_product, show_detail_product
-
-    app_name = 'main'
-
-    urlpatterns = [
-        path('', show_main, name='show_main'),
-        path('create-product/', create_product, name='create_product'),
-        path('product/<str:id>', show_detail_product, name='show_detail_product'),
-        ...
-    ]
-    ```
-
-----
-### Apakah ada feedback untuk asdos di tutorial 2 yang sudah kalian kerjakan?
-Pada tutorial 2, asisten dosen sudah sangat membantu dan terbuka terhadap pertanyaan kami yang ada selama sesi tutorial 2 berlangsung. Dokumen tutorialnya juga terstruktur dengan baik, dengan materi yang relevan dan praktis, sehingga sangat efektif untuk menguatkan pemahaman.
-
-### Hasil API Call dengan Postman
-**Format XML (All)**
-![image](https://github.com/user-attachments/assets/c8822cf3-8da6-4c5d-8ee4-f1eb6c3398f8)
-
-**Format JSON (All)**
-![image](https://github.com/user-attachments/assets/291f619d-8b18-43ab-be63-17e2d6f7cf83)
-
-**Format XML by ID**
-![image](https://github.com/user-attachments/assets/59d177c0-4755-4560-9cb4-84ff90d5fbb5)
-
-**Format JSON by ID**
-![image](https://github.com/user-attachments/assets/392dbb94-f129-4444-b7ed-4d68b053480b)
+- username tandra
+[my product](https://github.com/user-attachments/assets/01263a1e-d75c-4a68-8baf-ae48fa7ec608)
+[my product](https://github.com/user-attachments/assets/3a4d7d24-eadd-4255-87a4-25ccbbf973f5)
+[detail](https://github.com/user-attachments/assets/6ef39cc4-ba77-4f11-87ea-492908e46b90)
