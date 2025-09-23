@@ -44,14 +44,14 @@ Kekurangan:
 - **Autentikasi:** Proses memastikan identitas seseorang (misalnya melalui password dan username). Dalam konteks web, ini biasanya berarti memastikan bahwa user yang mencoba mengakses aplikasi memang siapa yang dia klaim. 
     - Contoh: login dengan username & password. Django akan mengecek apakah username dan password cocok dengan yang tersimpan di database.
 
-    **Implementasi di Django:**
-    Django memiliki modul built-in yaitu `django.contrib.auth`. yang menyediakan kerangka kerja lengkap untuk autentikasi dan otorisasi pengguna. Modul ini memungkinkan developer untuk mengelola login, logout, user, permission, dan grup tanpa harus membangun sistem keamanan dari nol. Fitur utama yang tersedia:
-        1. Model user (`django.contrib.auth.models.User`) → Menyimpan informasi identitas pengguna, seperti username, password, email, dsb
+    **Implementasi di Django:**  
+    Django memiliki modul built-in yaitu `django.contrib.auth`. yang menyediakan kerangka kerja lengkap untuk autentikasi dan otorisasi pengguna. Modul ini memungkinkan developer untuk mengelola login, logout, user, permission, dan grup tanpa harus membangun sistem keamanan dari nol. Fitur utama yang tersedia:  
+        1. Model user (`django.contrib.auth.models.User`) → Menyimpan informasi identitas pengguna, seperti username, password, email, dsb  
         2. Login & logout (`django.contrib.auth.login()` dan `logout()`) 
             - Fungsi `login(request, user)` menyimpan sesi pengguna yang telah berhasil autentikasi.
-            - Fungsi `logout(request)` menghapus informasi sesi, sehingga pengguna dianggap keluar (unauthenticated).
-        3. Form login (`AuthenticationForm`) → berfungsi memvalidasi username dan password dan memberikan error secara otomatis jika login gagal
-        4. Middleware (`AuthenticationMiddleware`) → Secara otomatis menambahkan objek `request.user` ke setiap request. Jika user sudah login, request.user berisi objek User dan jika belum, berisi AnonymousUser. Middleware menyediakan informasi user sehingga otorisasi bisa dilakukan di view atau template.
+            - Fungsi `logout(request)` menghapus informasi sesi, sehingga pengguna dianggap keluar (unauthenticated).  
+        3. Form login (`AuthenticationForm`) → berfungsi memvalidasi username dan password dan memberikan error secara otomatis jika login gagal  
+        4. Middleware (`AuthenticationMiddleware`) → Secara otomatis menambahkan objek `request.user` ke setiap request. Jika user sudah login, request.user berisi objek User dan jika belum, berisi AnonymousUser. Middleware menyediakan informasi user sehingga otorisasi bisa dilakukan di view atau template.  
 
 - **Otorisasi:** Proses pemberian hak akses atau izin kepada pengguna yang telah terautentikasi, untuk melakukan tindakan tertentu atau mengakses sumber daya (resources) tertentu dalam sistem komputer sesuai dengan hak akses yang dimiliki.
     - Contoh: Dalam sebuah aplikasi web, pengguna yang login sebagai “Admin” bisa menghapus artikel, sedangkan pengguna “Member” hanya bisa membaca dan mengomentari artikel.
@@ -66,30 +66,30 @@ Kekurangan:
 
 
 ### Apa saja kelebihan dan kekurangan session dan cookies dalam konteks menyimpan state di aplikasi web?
-1. **Cookies**
+1. **Cookies**  
 Cookies adalah berkas data berukuran kecil yang disimpan pada sisi klien (browser) oleh server. Cookies kemudian akan dikirim kembali oleh browser pada setiap permintaan (request) berikutnya ke server yang sama. Dengan demikian, cookies berfungsi untuk mempertahankan informasi state di sisi klien.
-**Kelebihan cookies:**
-- Seluruh browser modern telah mendukung cookies tanpa perlu konfigurasi tambahan.
-- Cookies dapat diset untuk bertahan meskipun browser ditutup, sehingga berguna untuk menyimpan preferensi pengguna dalam jangka panjang.
-- Mengurangi beban server -> karena data disimpan di sisi klien, server tidak perlu menyimpan informasi state untuk setiap pengguna.
+- **Kelebihan cookies:**
+    - Seluruh browser modern telah mendukung cookies tanpa perlu konfigurasi tambahan.
+    - Cookies dapat diset untuk bertahan meskipun browser ditutup, sehingga berguna untuk menyimpan preferensi pengguna dalam jangka panjang.
+    - Mengurangi beban server -> karena data disimpan di sisi klien, server tidak perlu menyimpan informasi state untuk setiap pengguna.
 
-**Kekurangan cookies:**
-- Ukuran terbatas –> cookies umumnya memiliki batas kapasitas sekitar 4 KB per domain.
-- Cookies disimpan di sisi klien sehingga rentan terhadap manipulasi dan serangan, seperti Cross-Site Scripting (XSS).
-- Overhead jaringan: cookies dikirim pada setiap permintaan HTTP, sehingga dapat meningkatkan ukuran request dan response.
-- Penyimpanan data penting seperti kata sandi dalam cookies sangat tidak disarankan.
+- **Kekurangan cookies:**
+    - Ukuran terbatas –> cookies umumnya memiliki batas kapasitas sekitar 4 KB per domain.
+    - Cookies disimpan di sisi klien sehingga rentan terhadap manipulasi dan serangan, seperti Cross-Site Scripting (XSS).
+    - Overhead jaringan: cookies dikirim pada setiap permintaan HTTP, sehingga dapat meningkatkan ukuran request dan response.
+    - Penyimpanan data penting seperti kata sandi dalam cookies sangat tidak disarankan.
 
-2. **Session**
+2. **Session**  
 Session adalah mekanisme penyimpanan state yang dikelola di sisi server. Pada session, klien hanya menyimpan sebuah pengenal (session ID), biasanya melalui cookie, sedangkan data state yang sesungguhnya tersimpan di server (misalnya dalam memori, file, atau basis data).
-**Kelebihan session:**
-- Keamanan lebih tinggi
-- Mendukung penyimpanan data kompleks
-- Administrator atau aplikasi dapat mengatur, menghapus, maupun memperbarui data session secara langsung dari sisi server.
+- **Kelebihan session:**  
+    - Keamanan lebih tinggi
+    - Mendukung penyimpanan data kompleks
+    - Administrator atau aplikasi dapat mengatur, menghapus, maupun memperbarui data session secara langsung dari sisi server.
 
-**Kekurangan session:**
-- Karena seluruh data dikelola oleh server, maka semakin banyak pengguna aktif akan semakin besar pula penggunaan basis data
-- Ketergantungan pada session ID, apabila session ID hilang maka state juga hilang
-- Tidak persisten secara default -> sebagian besar session berakhir ketika browser ditutup
+- **Kekurangan session:**  
+    - Karena seluruh data dikelola oleh server, maka semakin banyak pengguna aktif akan semakin besar pula penggunaan basis data
+    - Ketergantungan pada session ID, apabila session ID hilang maka state juga hilang
+    - Tidak persisten secara default -> sebagian besar session berakhir ketika browser ditutup
 
 
 ### Apakah penggunaan cookies aman secara default dalam pengembangan web, atau apakah ada risiko potensial yang harus diwaspadai? Bagaimana Django menangani hal tersebut?
@@ -236,12 +236,12 @@ Penanganan Cookies di Django:
 
 ### 5. Membuat Dua Akun Pengguna dengan Dummy Data
 Saya membuat dua akun berbeda dengan username jessica dan tandra. Masing2 akun memiliki 3 produk:
-- username jessica
-[my product](https://github.com/user-attachments/assets/15ee0d4c-45b7-402a-9a9c-f1af206cd476)
-[my product](https://github.com/user-attachments/assets/1c24e391-c71b-4134-b8b2-19a69cbcd7d2)
-[detail](https://github.com/user-attachments/assets/5ee2c0c4-9c9a-477b-9b5c-63a7a5e53876)
+- username jessica  
+![my product](https://github.com/user-attachments/assets/15ee0d4c-45b7-402a-9a9c-f1af206cd476)  
+![my product](https://github.com/user-attachments/assets/1c24e391-c71b-4134-b8b2-19a69cbcd7d2)  
+![detail](https://github.com/user-attachments/assets/5ee2c0c4-9c9a-477b-9b5c-63a7a5e53876)  
 
-- username tandra
-[my product](https://github.com/user-attachments/assets/01263a1e-d75c-4a68-8baf-ae48fa7ec608)
-[my product](https://github.com/user-attachments/assets/3a4d7d24-eadd-4255-87a4-25ccbbf973f5)
-[detail](https://github.com/user-attachments/assets/6ef39cc4-ba77-4f11-87ea-492908e46b90)
+- username tandra  
+![my product](https://github.com/user-attachments/assets/01263a1e-d75c-4a68-8baf-ae48fa7ec608)  
+![my product](https://github.com/user-attachments/assets/3a4d7d24-eadd-4255-87a4-25ccbbf973f5)  
+![detail](https://github.com/user-attachments/assets/6ef39cc4-ba77-4f11-87ea-492908e46b90)  
