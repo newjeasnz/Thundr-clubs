@@ -1,0 +1,63 @@
+{% load static %}
+<div class="bg-[#ffffff] rounded-xl shadow-md overflow-hidden relative hover:shadow-xl transition duration-300 flex flex-col h-full">
+
+  <!-- Edit & Delete Icons -->
+    {% if user.is_authenticated and product.user == user %}
+    <div class="absolute top-3 right-3 flex space-x-2">
+    <!-- Edit Button -->
+    <a href="{% url 'main:edit_product' product.id %}"
+        class="bg-[#efa041]/80 backdrop-blur-md p-2 rounded-full hover:bg-[#efa041]/90 transition">
+        <img src="{% static 'icons/pencil.png' %}" alt="Edit" class="w-4 h-4 invert brightness-0">
+    </a>
+
+    <!-- Delete Button -->
+    <a href="{% url 'main:delete_product' product.id %}"
+        class="bg-red-600/80 backdrop-blur-md p-2 rounded-full hover:bg-red-600/90 transition">
+        <img src="{% static 'icons/trash-2.png' %}" alt="Delete" class="w-4 h-4 invert brightness-0">
+    </a>
+    </div>
+    {% endif %}
+
+  <!-- Thumbnail -->
+  <a href="{% url 'main:show_detail_product' product.id %}">
+    {% if product.thumbnail %}
+      <img src="{{ product.thumbnail }}" alt="{{ product.name }}" class="w-full h-56 object-cover">
+    {% else %}
+      <div class="w-full h-56 bg-[#4b2b21] flex items-center justify-center text-[#fad29a]/60">
+        No Image
+      </div>
+    {% endif %}
+  </a>
+
+  <!-- Content -->
+  <div class="flex flex-col flex-1 px-5 pt-4 pb-5">
+
+    <!-- Nama Produk -->
+    <a href="{% url 'main:show_detail_product' product.id %}">
+      <h5 class="text-lg font-semibold tracking-tight text-[#433f3f] hover:text-[#2a1f20] transition line-clamp-2 min-h-[3.5rem]">
+        {{ product.name }}
+      </h5>
+    </a>
+
+    <!-- Deskripsi Produk -->
+    <a href="{% url 'main:show_detail_product' product.id %}">
+        <p class="text-sm text-[#2a1f20] hover:text-[#2a1f20] transition line-clamp-2 min-h-[3.5rem]">
+          {{ product.description|truncatewords:15 }}
+        </p>
+    </a>
+
+    <!-- Spacer agar tinggi seragam -->
+    <div class="flex-grow"></div>
+
+    <!-- Harga + Tombol -->
+    <div class="flex items-center justify-between mt-4">
+      <span class="text-xl font-bold text-[#433f3f] whitespace-nowrap">
+        Rp{{ product.price }}
+      </span>
+      <a href="{% url 'main:show_detail_product' product.id %}" 
+         class="bg-[#2a1f20] hover:bg-[#433f3f] text-[#ffffff] font-semibold rounded-lg text-sm px-5 py-2.5 transition">
+        See More
+      </a>
+    </div>
+  </div>
+</div>

@@ -1,27 +1,95 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block meta %}
+<title>{{ product.name }} - Thunder Clubs</title>
+{% endblock meta %}
+
 {% block content %}
+<div class="bg-[#565656] min-h-screen py-10">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-<p><a href="{% url 'main:show_main' %}"><button>← Back</button></a></p>
+    <!-- Back Navigation -->
+    <div class="mb-6">
+      <a href="{% url 'main:show_main' %}" class="text-[#fad29a] hover:text-[#efa041] transition font-medium flex items-center gap-1">
+        ← Back
+      </a>
+    </div>
 
-<h1>{{ product.name }}</h1>
+    <!-- Product Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 bg-white/90 backdrop-blur-md rounded-2xl shadow-lg overflow-hidden p-6 lg:p-10">
 
-{% if product.thumbnail %}
-<img src="{{ product.thumbnail }}" alt="Thumbnail" width="300">
-<br /><br />
-{% endif %}
+      <!-- Left: Product Image -->
+      <div class="flex items-center justify-center">
+        {% if product.thumbnail %}
+          <img src="{{ product.thumbnail }}" alt="{{ product.name }}" class="w-full max-w-md rounded-xl object-cover shadow-md">
+        {% else %}
+          <div class="w-full h-96 bg-gray-200 flex items-center justify-center text-gray-500 rounded-xl">
+            No Image Available
+          </div>
+        {% endif %}
+      </div>
 
-<p><b>Price:</b> Rp {{ product.price }}</p>
-<p><b>Category:</b> {{ product.get_category_display }}</p>
-<p><b>Description:</b> {{ product.description }}</p>
+      <!-- Right: Product Info -->
+      <div class="flex flex-col justify-between text-[#2a1f20]">
 
-{% if product.is_featured %}
-    <p><b>🌟 Featured Product</b></p>
-{% endif %}
+        <!-- Header -->
+        <div>
+          <h1 class="text-3xl lg:text-4xl font-bold mb-3">{{ product.name }}</h1>
+          <p class="text-lg text-gray-500 mb-4">{{ product.category|title }}</p>
+          <div class="text-2xl font-extrabold text-[#efa041] mb-6">
+            Rp{{ product.price }}
+          </div>
 
-{% if product.user %}
-    <p>Added by: {{ product.user.username }}</p>
-{% else %}
-    <p>Added by: Anonymous</p>
-{% endif %}
+          <!-- Size Selection (optional) -->
+          {% if product.sizes %}
+          <div class="mb-6">
+            <p class="font-semibold mb-2">Size:</p>
+            <div class="flex flex-wrap gap-2">
+              {% for size in product.sizes %}
+              <button class="px-4 py-2 border border-gray-300 rounded-md hover:bg-[#efa041] hover:text-white transition">
+                {{ size }}
+              </button>
+              {% endfor %}
+            </div>
+          </div>
+          {% endif %}
 
+          <!-- Description -->
+          <div class="mb-6">
+            <h2 class="text-xl font-semibold mb-2">Description</h2>
+            <p class="leading-relaxed text-gray-700 whitespace-pre-line">
+              {{ product.description }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Add to Cart -->
+        <div>
+          <div class="mt-6 flex items-center gap-4">
+            <div class="flex items-center border border-gray-300 rounded-lg">
+              <button class="px-3 py-2 text-lg hover:bg-gray-100 transition">−</button>
+              <input type="text" value="1" class="w-12 text-center bg-transparent text-[#2a1f20] focus:outline-none">
+              <button class="px-3 py-2 text-lg hover:bg-gray-100 transition">+</button>
+            </div>
+            <button class="flex-1 bg-[#efa041] text-white font-semibold py-3 rounded-lg hover:bg-[#d98c34] transition">
+              Add to Cart
+            </button>
+          </div>
+
+          <!-- Added by Info -->
+          <div class="border-t border-gray-200 mt-8 pt-4 text-sm text-gray-600">
+            {% if product.user %}
+              <p>Added by <span class="font-semibold text-gray-900">{{ product.user.username }}</span></p>
+            {% else %}
+              <p>Added by <span class="italic text-gray-500">Anonymous</span></p>
+            {% endif %}
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
 {% endblock content %}

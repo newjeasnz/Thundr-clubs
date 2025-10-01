@@ -1,0 +1,106 @@
+:root {
+  --bg-main: #ffffff;
+  --panel: #2a2a2a;
+  --accent: #efa041;
+  --text-main: #241e1e;
+  --text-secondary: #360909;
+}
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.form-style form input,
+.form-style form textarea,
+.form-style form select {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1.5px solid #444;
+  border-radius: 0.375rem;
+  background-color: #ffffff; 
+  color: #000000;             
+}
+
+.form-style form input::placeholder,
+.form-style form textarea::placeholder {
+  color: #888888; 
+}
+
+.form-style form input:focus,
+.form-style form textarea:focus,
+.form-style form select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(239, 160, 65, 0.4);
+}
+
+
+/* Checkbox Style — Konsisten dengan input putih */
+.form-style input[type="checkbox"] {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 1.5px solid #444;
+  border-radius: 0.375rem;
+  background-color: #ffffff;
+  cursor: pointer;
+  appearance: none;
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  transition: all 0.2s ease;
+}
+
+/* Fokus: glow orange kayak input lain */
+.form-style input[type="checkbox"]:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(239, 160, 65, 0.4);
+}
+
+/* Saat dicentang: background oranye + centang putih */
+.form-style input[type="checkbox"]:checked {
+  background-color: var(--accent);
+  border-color: var(--accent);
+}
+
+.form-style input[type="checkbox"]:checked::after {
+  content: '✓';
+  color: #ffffff;
+  font-size: 0.85rem;
+  font-weight: bold;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+button, .btn {
+  background-color: var(--accent);
+  color: var(--bg-main);
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+button:hover, .btn:hover {
+  background-color: #d98c36;
+}
+
+.product-card {
+  background-color: var(--panel);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  color: var(--text-main);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+.product-card h3 {
+  color: var(--accent);
+}
