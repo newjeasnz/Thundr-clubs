@@ -9,6 +9,11 @@
     <link rel="stylesheet" href="{% static 'css/global.css' %}"/>
   </head>
   <body>
-    {% block content %} {% endblock content %}
+      {% block content %}
+
+      {% endblock %}
+
+      {% include 'modal_create_product.html' %}
+      {% include 'modal_edit_product.html' %}
   </body>
 </html>

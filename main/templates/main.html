@@ -22,22 +22,29 @@
     <!-- Header Section -->
     <div class="text-center mb-10">
       <h1 class="text-4xl font-extrabold text-gray-900 tracking-wide mb-3">
-        Thunder Clubs
+        Thundr Clubs
       </h1>
       <p class="text-gray-600 text-lg">
         Explore premium football apparel, accessories, collectibles & more.
       </p>
     </div>
 
+    <!-- Button to open create product modal -->
+      <button onclick="showCreateModal()" class="inline-flex items-center px-4 py-2 bg-white text-[var(--text-secondary)] font-semibold outline outline-2 outline-[var(--text-secondary)] outline-offset-[-2px] rounded-md hover:bg-[var(--text-secondary)] hover:text-white transition-colors mb-4">
+        Create Product by AJAX
+      </button>
+
     <!-- Filter Section -->
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-10 bg-white rounded-2xl border border-gray-200 p-4 shadow-sm">
       <div class="flex space-x-3 mb-4 sm:mb-0">
-        <a href="?" class="{% if request.GET.filter == 'all' or not request.GET.filter %} bg-black text-white {% else %} bg-white text-gray-800 border border-gray-300 {% endif %} px-4 py-2 rounded-md font-medium transition-colors hover:bg-black hover:text-white">
-          All Products
-        </a>
-        <a href="?filter=my" class="{% if request.GET.filter == 'my' %} bg-black text-white {% else %} bg-white text-gray-800 border border-gray-300 {% endif %} px-4 py-2 rounded-md font-medium transition-colors hover:bg-black hover:text-white">
+          <button id="filter-all"
+            class="bg-[var(--accent)] text-white px-4 py-2 rounded-md font-medium transition-colors hover:bg-[#d98c36]">
+            All Products
+        </button>
+        <button id="filter-my"
+          class="bg-white text-[var(--accent)] border border-[var(--accent)] px-4 py-2 rounded-md font-medium transition-colors hover:bg-[var(--accent)] hover:text-white">
           My Products
-        </a>
+        </button>
       </div>
       {% if user.is_authenticated %}
         <div class="text-sm text-gray-500">
@@ -46,25 +53,436 @@
       {% endif %}
     </div>
 
-    <!-- Product Grid -->
-    {% if not product_list %}
-      <div class="bg-white rounded-2xl border border-gray-200 p-12 text-center shadow-sm">
-        <div class="w-36 h-36 mx-auto mb-4">
-          <img src="{% static 'image/no-product.png' %}" alt="No products" class="w-full h-full object-contain">
-        </div>
-        <h3 class="text-lg font-semibold text-gray-900 mb-2">No products found</h3>
-        <p class="text-gray-500 mb-6">Add products to start your football journey.</p>
-        <a href="{% url 'main:create_product' %}" class="inline-flex items-center px-5 py-2.5 bg-black text-white rounded-md hover:bg-gray-800 transition-colors">
-          + Add Product
-        </a>
+    <!-- Loading state -->
+    <div id="loading" class="hidden bg-white rounded-2xl border border-gray-200 p-12 text-center shadow-sm">
+      <p class="text-gray-500">Loading products...</p>
+    </div>
+
+    <!-- Error state -->
+    <div id="error" class="hidden bg-red-100 text-red-700 p-4 rounded-md mb-4"></div>
+
+    <!-- Empty state -->
+    <div id="empty" class="hidden bg-white rounded-2xl border border-gray-200 p-12 text-center shadow-sm">
+      <div class="w-36 h-36 mx-auto mb-4">
+        <img src="{% static 'image/no-product.png' %}" alt="No products" class="w-full h-full object-contain">
       </div>
-    {% else %}
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {% for product in product_list %}
-          {% include 'card_product.html' with product=product %}
-        {% endfor %}
-      </div>
-    {% endif %}
+      <h3 class="text-lg font-semibold text-gray-900 mb-2">No products found</h3>
+      <p class="text-gray-500 mb-6">Add products to start your football journey.</p>
+      <a href="{% url 'main:create_product' %}" class="inline-flex items-center px-5 py-2.5 bg-[var(--accent)] text-white rounded-md hover:bg-[#d98c36] transition-colors">
+        + Add Product
+      </a>
+    </div>
+
+    <!-- Product grid) -->
+    <div id="product-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 hidden"></div>
   </div>
 </div>
+
+....
+<script>
+// Configuration
+const PRODUCT_API_ENDPOINT = "{% url 'main:show_json' %}";
+const CURRENT_USER_ID = "{{ user.id|default_if_none:'' }}";
+const STATIC_URL = "{% static '' %}";
+
+// DOM Elements
+const loadingSpinner = document.getElementById('loading');
+const errorMessage = document.getElementById('error');
+const emptyStateDisplay = document.getElementById('empty');
+const productGridContainer = document.getElementById('product-grid');
+const showAllProductsButton = document.getElementById('filter-all');
+const showMyProductsButton = document.getElementById('filter-my');
+
+// State Variables
+let activeFilter = 'all';
+let allProductData = [];
+
+// Update filter button appearance
+function updateFilterButtonsAppearance() {
+  if (!showAllProductsButton || !showMyProductsButton) return;
+  
+  if (activeFilter === 'all') {
+    showAllProductsButton.className = 'bg-[var(--accent)] text-white px-4 py-2 rounded-md font-medium transition-colors hover:bg-[#d98c36]';
+    showMyProductsButton.className = 'bg-white text-[var(--accent)] border border-[var(--accent)] px-4 py-2 rounded-md font-medium transition-colors hover:bg-[var(--accent)] hover:text-white';
+  } else {
+    showMyProductsButton.className = 'bg-[var(--accent)] text-white px-4 py-2 rounded-md font-medium transition-colors hover:bg-[#d98c36]';
+    showAllProductsButton.className = 'bg-white text-[var(--accent)] border border-[var(--accent)] px-4 py-2 rounded-md font-medium transition-colors hover:bg-[var(--accent)] hover:text-white';
+  }
+}
+
+// Show/hide page sections
+function displayPageSection({ showLoading = false, showError = false, showEmpty = false, showGrid = false }) {
+  loadingSpinner.classList.toggle('hidden', !showLoading);
+  errorMessage.classList.toggle('hidden', !showError);
+  emptyStateDisplay.classList.toggle('hidden', !showEmpty);
+  productGridContainer.classList.toggle('hidden', !showGrid);
+  
+  // Add grid classes when showing grid
+  if (showGrid) {
+    productGridContainer.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8';
+  }
+}
+
+// Get readable category name
+function getReadableCategoryName(categoryCode) {
+  const categoryMapping = {
+    apparel: 'Apparel',
+    shoes: 'Shoes',
+    football: 'Football',
+    accessories: 'Accessories',
+    equipment: 'Equipment',
+    'goalkeeper gear': 'Goalkeeper Gear',
+    collectibles: 'Collectibles',
+  };
+  return categoryMapping[categoryCode] || categoryCode;
+}
+
+// Build Product Card
+function buildProductCardElement(product) {
+  const productElement = document.createElement('div');
+  // tambahkan semua class dari card_product.html ke sini
+  productElement.className = 'relative bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-lg transition overflow-hidden flex flex-col';
+
+  const detailLink = `{% url 'main:show_detail_product' '00000000-0000-0000-0000-000000000000' %}`.replace('00000000-0000-0000-0000-000000000000', product.id);
+  const editLink = `{% url 'main:edit_product' '00000000-0000-0000-0000-000000000000' %}`.replace('00000000-0000-0000-0000-000000000000', product.id);
+  const deleteLink = `{% url 'main:delete_product' '00000000-0000-0000-0000-000000000000' %}`.replace('00000000-0000-0000-0000-000000000000', product.id);
+  
+  
+  // menampilkan tombol edit/delete
+  let editDeleteButtonsAndModal = ''; // Defaultnya kosong
+  if (CURRENT_USER_ID && Number(CURRENT_USER_ID) === Number(product.user_id)) {
+    // Jika produk milik user, kita buat HTML untuk tombol & modal
+    editDeleteButtonsAndModal = `
+      <div class="absolute top-3 right-3 flex space-x-2">
+        <a href="${editLink}"
+        class="edit-product-btn bg-[#efa041]/80 backdrop-blur-md p-2 rounded-full hover:bg-[#efa041]/90 transition"
+        data-product-id="${product.id}">
+      <img src="${STATIC_URL}icons/pencil.png" alt="Edit" class="w-4 h-4 invert brightness-0">
+      </a>
+
+        <button 
+          type="button"
+          onclick="document.getElementById('deleteDialog-${product.id}').showModal()"
+          class="bg-red-600/80 backdrop-blur-md p-2 rounded-full hover:bg-red-600/90 transition">
+          <img src="${STATIC_URL}icons/trash-2.png" alt="Delete" class="w-4 h-4 invert brightness-0">
+        </button>
+      </div>
+
+      <dialog id="deleteDialog-${product.id}" class="rounded-lg p-6 max-w-sm w-full backdrop:bg-black/50">
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-10 h-10 flex items-center justify-center bg-red-100 rounded-full">
+            <img src="${STATIC_URL}icons/octagon-alert.png" alt="Alert" class="w-6 h-6">
+          </div>
+          <h3 class="text-lg font-bold text-gray-900">Hapus Produk?</h3>
+        </div>
+        <p class="text-gray-700 mb-4">
+          Apakah kamu yakin ingin menghapus <strong>${product.name}</strong>? Setelah dihapus, produk tidak dapat dipulihkan.
+        </p>
+        <div class="flex justify-end gap-3">
+          <button 
+            type="button"
+            onclick="document.getElementById('deleteDialog-${product.id}').close()"
+            class="px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300 transition">
+            Batal
+          </button>
+          <a href="${deleteLink}" class="px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700 transition">
+            Hapus
+          </a>
+        </div>
+      </dialog>
+    `;
+  }
+  
+  // Gambar thumbnail
+  const thumbnailHtml = product.thumbnail 
+    ? `<img src='${product.thumbnail}' alt='${product.name}' class='w-full h-56 object-cover'>` 
+    : `<div class="w-full h-56 bg-[#4b2b21] flex items-center justify-center text-[#fad29a]/60">No Image</div>`;
+
+  // Gabungkan semua bagian HTML menjadi satu
+  const completeCardHtml = `
+    ${editDeleteButtonsAndModal} <a href="${detailLink}">
+      ${thumbnailHtml}
+    </a>
+    
+    <div class="flex flex-col flex-1 px-5 pt-4 pb-5">
+      <a href="${detailLink}">
+        <h5 class="text-lg font-semibold tracking-tight text-[#433f3f] hover:text-[#2a1f20] transition line-clamp-2 min-h-[3.5rem]">
+          ${product.name}
+        </h5>
+      </a>
+      <a href="${detailLink}">
+        <p class="text-sm text-[#2a1f20] hover:text-[#2a1f20] transition line-clamp-2 min-h-[3.5rem]">
+          ${product.description}
+        </p>
+      </a>
+      <div class="flex-grow"></div>
+      <div class="flex items-center justify-between mt-4">
+        <span class="text-xl font-bold text-[#433f3f] whitespace-nowrap">
+          Rp${product.price}
+        </span>
+        <a href="${detailLink}" 
+           class="bg-[#2a1f20] hover:bg-[#433f3f] text-[#ffffff] font-semibold rounded-lg text-sm px-5 py-2.5 transition">
+          See More
+        </a>
+      </div>
+    </div>
+  `;
+
+  productElement.innerHTML = completeCardHtml;
+  return productElement;
+}
+
+// Render all product cards
+function renderAllProductCards(products) {
+  productGridContainer.innerHTML = '';
+  products.forEach(product => {
+    const cardElement = buildProductCardElement(product);
+    productGridContainer.appendChild(cardElement);
+  });
+}
+
+// Filter and display product
+function filterAndDisplayProducts() {
+  updateFilterButtonsAppearance();
+  
+  const filtered = activeFilter === 'all' 
+    ? allProductData 
+    : allProductData.filter(p => Number(p.user_id) === Number(CURRENT_USER_ID));
+  
+  if (filtered.length === 0) {
+    displayPageSection({ showEmpty: true });
+  } else {
+    renderAllProductCards(filtered);
+    displayPageSection({ showGrid: true });
+  }
+}
+
+// Fetch from server
+async function fetchProductsFromServer() {
+  try {
+    displayPageSection({ showLoading: true });
+    
+    const response = await fetch(PRODUCT_API_ENDPOINT, {
+      headers: { 'Accept': 'application/json' },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch product data');
+    }
+
+    const productData = await response.json();
+    allProductData = productData || [];
+    
+    filterAndDisplayProducts();
+  } catch (error) {
+    console.error('Error loading products:', error);
+    displayPageSection({ showError: true });
+    errorMessage.textContent = 'Failed to load products. Please try again.';
+  }
+}
+
+// Event handlers
+function handleShowAllProductsClick() {
+  activeFilter = 'all';
+  filterAndDisplayProducts();
+}
+
+function handleShowMyProductsClick() {
+  activeFilter = 'my';
+  filterAndDisplayProducts();
+}
+
+// Fungsi untuk menampilkan modal
+function showCreateModal() {
+  const modal = document.getElementById('createProductModal');
+  if(modal) modal.classList.remove('hidden');
+}
+
+// Fungsi untuk menyembunyikan modal
+function hideCreateModal() {
+  const modal = document.getElementById('createProductModal');
+  if(modal) modal.classList.add('hidden');
+}
+
+function showEditModal() {
+  const modal = document.getElementById('editProductModal');
+  if(modal) modal.classList.remove('hidden');
+}
+
+function hideEditModal() {
+  const modal = document.getElementById('editProductModal');
+  if(modal) modal.classList.add('hidden');
+}
+
+// Fungsi untuk membuka modal edit dan mengisinya dengan data
+async function openEditModal(productId) {
+    const editForm = document.getElementById('editModalForm');
+    const submitButton = document.querySelector('button[type="submit"][form="editModalForm"]');
+    
+    if (!editForm || !submitButton) {
+        console.error("Form edit atau tombol submit tidak ditemukan!");
+        return;
+    }
+
+    // 1. Reset form untuk membersihkan data dari editan sebelumnya
+    editForm.reset();
+    
+    // 2. Tampilkan modal dan status loading pada tombol
+    showEditModal();
+    const originalButtonText = submitButton.innerHTML;
+    submitButton.innerHTML = "Loading...";
+    submitButton.disabled = true;
+
+    try {
+        // 3. Ambil data baru dari server
+        const response = await fetch(`/json/${productId}/`);
+        if (!response.ok) throw new Error('Failed to fetch product data for editing.');
+        const productData = await response.json();
+
+        // 4. Isi field form yang SUDAH ADA dengan data baru
+        editForm.querySelector('[name="name"]').value = productData.name;
+        editForm.querySelector('[name="price"]').value = productData.price;
+        editForm.querySelector('[name="description"]').value = productData.description;
+        editForm.querySelector('[name="thumbnail"]').value = productData.thumbnail || '';
+        editForm.querySelector('[name="category"]').value = productData.category;
+        editForm.querySelector('[name="is_featured"]').checked = productData.is_featured;
+        
+        // 5. Atur 'action' pada form untuk proses submit nanti
+        editForm.action = `/edit-product-ajax/${productId}/`;
+
+    } catch (error) {
+        console.error('Error saat membuka modal edit:', error);
+        alert('Tidak dapat memuat data produk. Silakan coba lagi.');
+        hideEditModal(); // Tutup modal jika terjadi error
+    } finally {
+        // 6. Kembalikan tombol ke keadaan normal setelah selesai
+        submitButton.innerHTML = originalButtonText;
+        submitButton.disabled = false;
+    }
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Apakah string cookie ini dimulai dengan nama yang kita inginkan?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// Menunggu sampai seluruh halaman HTML selesai dimuat
+document.addEventListener('DOMContentLoaded', (event) => {
+    
+    // --- SETUP EVENT LISTENER UTAMA ---
+
+    // 1. Listener untuk tombol filter
+    const showAllButton = document.getElementById('filter-all');
+    const showMyButton = document.getElementById('filter-my');
+    if (showAllButton && showMyButton) {
+        showAllButton.addEventListener('click', handleShowAllProductsClick);
+        showMyButton.addEventListener('click', handleShowMyProductsClick);
+    }
+
+    // 2. Listener untuk event kustom 'productAdded'
+    document.addEventListener('productAdded', function() {
+        console.log("Produk baru ditambahkan, mengambil data terbaru...");
+        fetchProductsFromServer(); 
+    });
+
+    // 3. Listener terpusat untuk semua klik di halaman (Create & Edit)
+    document.body.addEventListener('click', function(e) {
+        const editButton = e.target.closest('.edit-product-btn');
+        if (editButton) {
+            e.preventDefault();
+            const productId = editButton.dataset.productId;
+            openEditModal(productId);
+        }
+    });
+
+    // 4. Listener untuk submit form CREATE
+    const createForm = document.getElementById('createProductForm');
+    if (createForm) {
+        createForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const formData = new FormData(createForm);
+            const createButton = document.querySelector('button[type="submit"][form="createProductForm"]');
+            const originalButtonText = createButton.innerHTML;
+            createButton.innerHTML = 'Creating...';
+            createButton.disabled = true;
+
+            try {
+                const response = await fetch("{% url 'main:add_product_ajax' %}", {
+                    method: 'POST',
+                    body: formData,
+                    headers: {'X-CSRFToken': getCookie('csrftoken')} // Tambahkan CSRF Token
+                });
+
+                if (response.status === 201) {
+                    hideCreateModal();
+                    createForm.reset();
+                    document.dispatchEvent(new CustomEvent('productAdded'));
+                } else {
+                    alert('Error: Gagal membuat produk.');
+                }
+            } catch (error) {
+                console.error('Submission error:', error);
+                alert('Terjadi kesalahan.');
+            } finally {
+                createButton.innerHTML = originalButtonText;
+                createButton.disabled = false;
+            }
+        });
+    }
+
+    // 5. Listener untuk submit form EDIT
+    const editForm = document.getElementById('editModalForm');
+    if (editForm) {
+        editForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const form = e.target;
+            const url = form.action;
+            const formData = new FormData(form);
+            const submitButton = document.querySelector('button[type="submit"][form="editModalForm"]');
+            const originalButtonText = submitButton.innerHTML;
+            submitButton.innerHTML = "Saving...";
+            submitButton.disabled = true;
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {'X-CSRFToken': getCookie('csrftoken'), 'X-Requested-With': 'XMLHttpRequest'},
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    hideEditModal();
+                    
+                    fetchProductsFromServer();
+                } else {
+                    alert('Error: ' + JSON.stringify(data.errors));
+                }
+            } catch (error) {
+                console.error('Error submitting edit form:', error);
+                alert('An error occurred while saving.');
+            } finally {
+                submitButton.innerHTML = originalButtonText;
+                submitButton.disabled = false;
+            }
+        });
+    }
+
+    fetchProductsFromServer();
+});
+</script>
+...
 {% endblock content %}

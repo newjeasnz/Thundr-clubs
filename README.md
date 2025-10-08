@@ -11,179 +11,49 @@ Kelas     : PBP B
 - [Tugas 2 - PBP 2025/2026](https://github.com/newjeasnz/Thundr-clubs/wiki/TUGAS-2-%E2%80%90-PBP-2025-2026)
 - [Tugas 3 - PBP 2025/2026](https://github.com/newjeasnz/Thundr-clubs/wiki/TUGAS-3-%E2%80%90-PBP-2025-2026)
 - [Tugas 4 - PBP 2025/2026](https://github.com/newjeasnz/Thundr-clubs/wiki/TUGAS-4-%E2%80%90-PBP-2025-2026)
+- [Tugas 5 - PBP 2025/2026](https://github.com/newjeasnz/Thundr-clubs/wiki/TUGAS-5-%E2%80%90-PBP-2025-2026)
 
 ---
 
-## TUGAS 5 - PBP 2025/2026
-Berikut adalah jawaban dari pertanyaan yang terdapat pada Tugas 5:
+## TUGAS 6 - PBP 2025/2026
+Berikut adalah jawaban dari pertanyaan yang terdapat pada Tugas 6:
 
-### Urutan prioritas pengambilan CSS selector
-Jika suatu elemen HTML memiliki beberapa CSS selector yang mengaturnya, maka browser akan menentukan gaya mana yang digunakan berdasarkan specificity (tingkat kekhususan) dan urutan deklarasi. Urutan prioritasnya adalah sebagai berikut:
-1. **Inline Style**. Contoh: `<p style="color: red;">Teks ini merah</p>` memiliki prioritas tertinggi
-2. **ID selector** (#id). Contoh: `#judul { color: blue; }`. 
-3. **Class selector**, **pseudo-class**, dan **attribute selector**
-    Contoh:
-    ```css
-    .teks { color: green; }         /* class */
-    p:hover { color: orange; }      /* pseudo-class */
-    input[type="text"] { ... }      /* attribute selector */
-    ```
-4. **Tag / element selector**. Contoh: `p { color: black; }`
-5. **Important rule** (!important) dapat mengesampingkan semua urutan di atas dan memberikan prioritas tertinggi untuk suatu property. Contoh:
-    ```html
-    <div id="header" class="menu">Title</div>
-    ```
-    ```css
-    #header { color: blue; }
-    .menu { color: green !important; }
-    div { color: red; }
-    ```
-    teks akan berwarna hijau, karena aturan .menu memiliki !important, sehingga mengalahkan selector #header meskipun ID lebih spesifik.
+### Apa perbedaan antara synchronous request dan asynchronous request?
+Synchronous request dan asynchronous request berbeda pada cara program menunggu respons dari server. Pada synchronous request, program akan berhenti dan menunggu sampai server mengirimkan balasan sebelum melanjutkan eksekusi kode berikutnya. Artinya, eksekusi kode bersifat berurutan, sehingga jika respons server lambat, seluruh program akan terblokir sampai data diterima. Sebaliknya, asynchronous request memungkinkan program untuk tetap berjalan tanpa menunggu respons server. Saat request dikirim, program dapat mengeksekusi kode lain, dan ketika balasan dari server sudah siap, sebuah callback atau mekanisme penanganan tertentu akan dijalankan. Dengan demikian, asynchronous request lebih efisien dalam mengelola operasi yang memerlukan waktu tunggu, seperti pengambilan data dari API atau operasi I/O, karena tidak membuat program berhenti sementara menunggu server merespons.
 
-### Mengapa responsive design menjadi konsep yang penting? Berikan contoh aplikasi dan jelaskan
-Responsive design penting karena memungkinkan tampilan website beradaptasi secara otomatis dengan berbagai ukuran layar (desktop, tablet, maupun smartphone). Dengan responsive design, pengguna akan mendapatkan pengalaman yang konsisten dan nyaman tanpa harus melakukan zoom atau scroll horizontal.
-Selain itu, responsive design juga meningkatkan aksesibilitas, user engagement, dan peringkat SEO, karena Google lebih memprioritaskan website yang mobile-friendly.
+### Bagaimana AJAX bekerja di Django (alur request–response)?
+1. **Event di browser**
+Pengguna melakukan aksi di halaman web, misalnya menekan tombol atau mengisi form. JavaScript menangkap event ini dan memicu request AJAX.
 
-**Contoh Aplikasi yang sudah menerapkan Responsive Design:**
-- Google: Halaman pencarian Google otomatis menyesuaikan layout dan ukuran font sesuai lebar layar.
-- Youtube: Video, kolom komentar, dan rekomendasi otomatis berpindah posisi jika layar diperkecil.
+2. **Mengirim request AJAX**
+JavaScript membuat request HTTP (biasanya GET atau POST) ke server Django tanpa me-reload halaman. Data tambahan bisa dikirim sebagai query parameter atau body request.
 
-**Contoh Aplikasi yang belum menerapkan Responsive Design:**
-- SIAK NG (academic.cs.ui.ac.id): Hanya sesuai untuk tampilan dekstop. Saat dibuka lewat HP, layout-nya melebar sehingga pengguna harus scroll ke samping atau zoom in/out untuk membaca isi.
-![Image](https://github.com/user-attachments/assets/6a17026c-d4ef-4b54-a6ef-8172b3f38ed5)
+3. **Django menerima request**
+Request masuk ke Django melalui URL routing (urls.py) yang mengarah ke view tertentu. View ini bisa berupa fungsi atau class-based view.
 
-### Perbedaan margin, border, dan padding, serta bagaimana pengimplementasiannya?
-1. **Padding**
-Memberi jarak antara konten elemen dan batas (border) elemen itu sendiri. Implementasi: 
-```css
-div {
-  padding: 20px;
-}
-```
-2. **Border**
-Garis pembatas di antara padding dan margin, mengelilingi elemen (seperti bingkai di luar padding). Implementasi:
-```css
-div {
-  border: 2px solid black;
-}
-```
-3. **Margin**
-Memberi jarak antara elemen tersebut dengan elemen lain di sekitarnya (ruang kosong di luar border elemen). Implementasi:
-```css
-div {
-  margin: 15px;
-}
-```
-**Ilustrasi Box Model:**
-![image](https://github.com/user-attachments/assets/44220ac6-0279-4d66-954b-ef511837a854")
+4. **Memproses request di server**
+Di view, Django memproses data yang dikirim, misalnya mengambil data dari database, melakukan perhitungan, atau validasi input.
 
-### Konsep flex box dan grid layout
-1. **Flexbox**
-Flexbox adalah sistem layout 1 dimensi, yang berfungsi untuk mengatur tata letak elemen secara fleksibel dalam satu baris atau satu kolom. Elemen-elemen di dalam container fleksibel ini akan otomatis menyesuaikan ukuran dan posisi berdasarkan ruang yang tersedia.
+5. **Membuat response**
+Setelah diproses, view Django mengembalikan response, biasanya berupa JSON (JsonResponse) karena format ini mudah diolah oleh JavaScript di sisi client.
 
-**Kegunaan Flexbox:**
-- Meratakan elemen secara horizontal atau vertikal dengan mudah.
-- Mengatur jarak antar elemen tanpa banyak perhitungan manual.
-- Cocok untuk layout sederhana seperti navbar, tombol-tombol dalam baris, atau card yang berjejer.
+6. **JavaScript menerima response**
+Browser menerima response JSON tanpa me-reload halaman. JavaScript kemudian mem-parsing data ini dan memperbarui elemen HTML sesuai kebutuhan, misalnya menampilkan data baru atau menandai status tertentu. Terakhir, pengguna melihat hasil update di halaman secara real-time, sementara halaman tetap berada di posisi yang sama, tanpa reload penuh.
 
-**Contoh penggunaan:**
-```html
-<div style="display: flex; justify-content: center; gap: 10px;">
-  <div style="background: lightblue; padding: 10px;">1</div>
-  <div style="background: lightgreen; padding: 10px;">2</div>
-  <div style="background: lightcoral; padding: 10px;">3</div>
-</div>
+### Apa keuntungan menggunakan AJAX dibandingkan render biasa di Django?
+Keuntungan menggunakan AJAX dibandingkan render biasa di Django terletak pada efisiensi dan pengalaman pengguna. Dengan render biasa, setiap kali halaman perlu diperbarui, browser melakukan request penuh ke server, memuat ulang seluruh halaman, dan menampilkan kembali semua konten. Hal ini bisa terasa lambat dan kurang responsif, terutama jika hanya sebagian kecil konten yang berubah.
 
-```
+Sedangkan dengan AJAX, hanya data yang dibutuhkan yang dikirim dan diterima dari server, biasanya dalam format JSON, tanpa me-reload seluruh halaman. Ini membuat interaksi menjadi lebih cepat dan halus karena pengguna tetap berada pada halaman yang sama, sementara konten tertentu diperbarui secara real-time. Selain itu, AJAX memungkinkan interaksi yang lebih dinamis, seperti validasi form, filter data, atau update tabel secara langsung, sehingga pengalaman pengguna terasa lebih responsif dan modern.
 
-2. **CSS Grid Layout**
-Grid layout adalah sistem layout 2 dimensi, yang memungkinkan kita untuk mengatur elemen dalam baris dan kolom secara bersamaan. Dengan grid, kita bisa membuat struktur layout yang kompleks seperti halaman web utama dengan sidebar, header, dan konten utama.
+### Bagaimana cara memastikan keamanan saat menggunakan AJAX untuk fitur Login dan Register di Django?
+Untuk memastikan keamanan saat menggunakan AJAX untuk fitur Login dan Register di Django, ada beberapa hal penting yang harus diperhatikan. 
+1. Gunakan HTTPS agar data yang dikirim, termasuk username dan password, terenkripsi saat berpindah dari browser ke server. Ini mencegah penyadapan data sensitif.
+2. Aktifkan CSRF protection. Django memiliki mekanisme CSRF token untuk mencegah serangan cross-site request forgery. Saat menggunakan AJAX, pastikan token CSRF dikirim bersama request POST. Biasanya, token ini diambil dari cookie csrftoken dan disertakan di header request.
+3. Validasi input di server. Jangan mengandalkan validasi di sisi client saja karena bisa dimanipulasi. Pastikan Django memeriksa username, email, password, dan aturan keamanan lain sebelum membuat user baru atau memproses login.
+4. Batasi percobaan login untuk mencegah brute-force attack. Misalnya, blokir IP atau akun sementara setelah beberapa kali percobaan login gagal.
+5. Hindari menampilkan pesan terlalu detail pada error login. Misalnya, jangan bilang “password salah” atau “username tidak ditemukan” secara spesifik karena bisa membantu pihak ketiga menebak akun.
 
-**Kegunaan Grid Layout:**
-- Membuat layout halaman yang rapi dan responsif.
-- Cocok untuk struktur besar seperti tampilan dashboard, galeri gambar, atau tampilan e-commerce
-- Lebih mudah untuk membagi area dan menyusun elemen dalam grid.
+Dengan kombinasi HTTPS, CSRF protection, validasi server-side, pembatasan percobaan login, dan handling error yang aman, fitur Login dan Register berbasis AJAX tetap aman digunakan.
 
-**Contoh Penggunaan**
-```html
-<div style="display: grid; grid-template-columns: 1fr 2fr; gap: 10px;">
-  <div style="background: lightblue; padding: 10px;">Sidebar</div>
-  <div style="background: lightgreen; padding: 10px;">Konten utama</div>
-</div>
-
-```
-
----
-# Langkah Pengimplementasian
-## Implementasi Fungsi Edit dan Hapus
-###  1. Buat fungsi pada `views.py` untuk edit dan hapus
-```python
-# Fungsi untuk mengedit product
-def edit_product(request, id):
-    product = get_object_or_404(Product, pk=id)
-    form = ProductForm(request.POST or None, instance=product)
-    if form.is_valid() and request.method == 'POST':
-        form.save()
-        return redirect('main:show_main')
-    
-    context = {
-        'form' : form
-    }
-
-    return render(request, "edit_product.html", context)
-```
-
-```python
-# Fungsi untuk menghapus product
-def delete_product(request, id):
-    product = get_object_or_404(Product, pk=id)
-    product.delete()
-    return HttpResponseRedirect(reverse('main:show_main'))
-```
-
-### 2. Impor fungsi edit dan hapus ke dalam urls.py dan tambahkan path url nya
-```python
-from main.views import delete_product, edit_product
-urlpatterns = [
-    ...
-    path('product/<uuid:id>/edit', edit_product, name='edit_product'),
-    path('product/<uuid:id>/delete', delete_product, name='delete_product')
-]
-```
-
-### 3. Buat file template `edit_product.html` kemudian lakukan kustomisasi pada file tersebut
-### 4. Munculkan tombol edit dan delete pada `main.html`
-```html
-     <a href="{% url 'main:show_news' news.id %}"><button>Read More</button></a>
-     {% if user.is_authenticated and news.user == user %}
-     <a href="{% url 'main:edit_news' news.pk %}">
-         <button>
-             Edit
-         </button>
-     </a>
-     <a href="{% url 'main:delete_news' news.pk %}">
-      <button>
-          Delete
-      </button>
-  </a>
-```
-
-## Buat Navigation Bar yang responsif
-### 1. Buat file template `navbar.html` pada main/templates dan kemudian lakukan kustomisasi sesuai dengan fitur yang diperlukan
-### 2. Tautkan navbar tersebut ke dalam `main.html` dengan menggunakan tags include (`{% include 'navbar.html' %}`)
-```html
-{% extends 'base.html' %}
-{% block content %}
-{% include 'navbar.html' %}
-...
-{% endblock content%}
-```
-
-## Styling CSS
-### 1. Hubungkan `global.css` dan script Tailwind ke `base.html`
-### 2. Custom styling ke global.css
-### 3. Styling pada Navbar
-### 4. Styling halaman login, register, detail product, create product, edit product dengan css framework
-### 5. Styling home dengan menambahkan card product
-**Jika belum ada produk yang tersedia, tampilkan gambar dan tulisan yang sesuai**
-yaitu dengan cara menambahkan no-product.png pada folder static/images. Kemudian modifikasi main.html untuk menghubungkan card_product.html dan no-product.png
+### Bagaimana AJAX mempengaruhi pengalaman pengguna (User Experience) pada website?
+AJAX secara signifikan meningkatkan pengalaman pengguna pada website karena memungkinkan interaksi yang lebih cepat dan responsif. Dengan AJAX, halaman tidak perlu di-reload penuh setiap kali pengguna melakukan aksi, sehingga perubahan konten bisa ditampilkan secara real-time. Misalnya, saat mengisi form, memfilter data, atau memuat komentar baru, pengguna dapat melihat hasilnya langsung tanpa menunggu refresh halaman. Hal ini membuat website terasa lebih halus, modern, dan interaktif, serta mengurangi waktu tunggu yang bisa membuat pengguna frustrasi. Selain itu, AJAX juga memungkinkan pengelolaan data secara dinamis, sehingga pengguna dapat melakukan beberapa aksi sekaligus tanpa kehilangan konteks halaman yang sedang digunakan.
